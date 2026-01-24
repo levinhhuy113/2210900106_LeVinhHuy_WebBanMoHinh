@@ -1,0 +1,401 @@
+{{#> _wrappers/user-wrapper}}
+
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow">Chi tiết sản phẩm</p>
+        <h1>{{product.name}}</h1>
+    </div>
+</section>
+<main class="container section product-detail-page">
+    <div class="detail-layout">
+        <div>
+            <div class="gallery-main">
+                <img id="mainProductImage" src="{{product.images.[0]}}" alt="RX-93 Nu Gundam">
+            </div>
+            <div class="thumbs thumbnail-images">
+                {{#each product.images}}
+                <img class="thumbnail" src="{{this}}" alt="thumb">
+                {{/each}}
+
+            </div>
+        </div>
+        <div class="detail-info">
+            Danh mục: <p class="tag">{{product.categoryId.name}}</p>
+
+            Thương hiệu: <p class="tag">{{product.brandId.name}}</p>
+            <h1>{{product.name}}</h1>
+
+            <div id="variant-container">
+
+            </div>
+
+            <h2 class="product-price">{{formatCurrency product.price}}</h2>
+
+            <div class="quantity-selector">
+                <button id="decreaseQty">-</button>
+                <input type="number" id="productQty" value="1" min="1">
+                <button id="increaseQty">+</button>
+            </div>
+
+            <div class="cta-row">
+                <a id="addToCart" data-id="{{product._id}}" class="btn primary"><i class="bi bi-cart"></i>Thêm vào giỏ
+                    hàng</a>
+                {{!-- <a id="buyNow" class="btn ghost">Mua ngay<i class="bi bi-arrow-right"></i></a> --}}
+            </div>
+            {{!-- <div class="info-card">
+                <h4>- Thông tin sản phẩm</h4>
+                <p style="text-align: justify;white-space: pre-line;">{{product.productInfo}}</p>
+
+                <h4 style="margin-top: 12px;">- Công dụng</h4>
+                <p style="text-align: justify;white-space: pre-line;">{{product.usage}}</p>
+
+            </div> --}}
+            <div class="info-card">
+                <h4>- Thông tin sản phẩm</h4>
+                <ul>
+                    {{#each (splitLines product.productInfo) }}
+                    <li>• {{this}}</li>
+                    {{/each}}
+                </ul>
+
+                <h4 style="margin-top: 12px;">- Công dụng</h4>
+                <ul>
+                    {{#each (splitLines product.usage) }}
+                    <li>• {{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+<main class="container section">
+    <section class="section review-section">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">Nhận xét</p>
+                <h2>Đánh giá sản phẩm</h2>
+            </div>
+            <div class="right">
+                {{#if totalReviews}}
+                <div class="rating-average">
+                    <div class="average-number">{{averageRating}}</div>
+                    <div class="rating-group">
+                        <div class="rating-stars">
+                            {{#each (range 1 5)}}
+                            <i class="bi {{#if (lte this ../averageRating)}}bi-star-fill{{else}}bi-star{{/if}}"></i>
+                            {{/each}}
+                        </div>
+                        <div class="total-reviews">
+                            Đánh giá bởi ({{totalReviews}} người)
+                        </div>
+                    </div>
+                </div>
+                {{else}}
+                <div class="no-reviews">
+                    Chưa có đánh giá nào
+                </div>
+                {{/if}}
+            </div>
+        </div>
+        {{#if reviews.length}}
+        <div class="reviews-grid">
+            {{#each reviews}}
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="review-user-info">
+                        <img src="{{this.userId.avatarUrl}}" alt="{{this.userId.fullName}}" class="review-avatar">
+                        <div class="user-details">
+                            <strong>{{this.userId.fullName}}</strong>
+                            <div class="rating-stars">
+                                {{#each (range 1 5)}}
+                                <i class="bi {{#if (lte this ../rating)}}bi-star-fill{{else}}bi-star{{/if}}"></i>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-date">
+                        <p>Ngày đăng</p>
+                        <small>{{formatDate this.createdAt}}</small>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="review-body">
+
+                    {{#if this.images.length}}
+                    <div class="review-images">
+                        {{#each this.images}}
+                        <img src="{{this}}" class="review-image" alt="review image">
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                    <p class="comment">{{this.comment}}</p>
+
+                </div>
+            </div>
+            {{/each}}
+
+        </div>
+        {{else}}
+        <p class="text-center text-muted">Chưa có đánh giá nào cho sản phẩm này.</p>
+        {{/if}}
+    </section>
+</main>
+
+<script>
+    const PRODUCT = {{{ json product }}};
+
+    let selectedVariants = {};
+    let currentCombination = null;
+    const productPrice = document.querySelector('.product-price');
+    window.matchingCombo = PRODUCT.hasVariants ? PRODUCT.variantCombinations[0] : null
+
+    function initializeVariants() {
+        if (!PRODUCT.hasVariants || !PRODUCT.variants || PRODUCT.variants.length === 0) {
+            return;
+        }
+
+        renderVariants();
+    }
+
+    function getAvailableOptions(variantId, variantIndex) {
+        const availableOptions = new Set();
+
+        PRODUCT.variantCombinations.forEach(combo => {
+            if (variantIndex === 0) {
+                const variantInCombo = combo.variants.find(v => v.variantId === variantId);
+                if (variantInCombo) {
+                    availableOptions.add(variantInCombo.value);
+                }
+            } else {
+                const matchPrevious = checkPreviousSelections(combo, variantIndex);
+
+                if (matchPrevious) {
+                    const variantInCombo = combo.variants.find(v => v.variantId === variantId);
+                    if (variantInCombo) {
+                        availableOptions.add(variantInCombo.value);
+                    }
+                }
+            }
+        });
+
+        return Array.from(availableOptions);
+    }
+
+    function checkPreviousSelections(combo, currentIndex) {
+        for (let i = 0; i < currentIndex; i++) {
+            const prevVariant = PRODUCT.variants[i];
+            const selectedValue = selectedVariants[prevVariant._id];
+
+            if (!selectedValue) {
+                return false;
+            }
+
+            const matchInCombo = combo.variants.some(v =>
+                v.variantId === prevVariant._id && v.value === selectedValue
+            );
+
+            if (!matchInCombo) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function renderVariants() {
+        const container = document.getElementById('variant-container');
+        container.innerHTML = '';
+
+        PRODUCT.variants.forEach((variant, index) => {
+            const variantGroup = createVariantGroup(variant, index);
+            container.appendChild(variantGroup);
+        });
+
+        if (PRODUCT.variants.length > 0) {
+            const firstVariant = PRODUCT.variants[0];
+            const availableOptions = getAvailableOptions(firstVariant._id, 0);
+            if (availableOptions.length > 0) {
+                selectVariantOption(firstVariant._id, availableOptions[0], 0);
+            }
+        }
+    }
+
+    function createVariantGroup(variant, variantIndex) {
+        const group = document.createElement('div');
+        group.className = 'variant-group';
+        group.dataset.variantId = variant._id;
+        group.dataset.variantIndex = variantIndex;
+
+        const title = document.createElement('div');
+        title.className = 'variant-title';
+        title.textContent = variant.name + ":";
+        group.appendChild(title);
+
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = 'variant-options';
+
+        const availableOptions = getAvailableOptions(variant._id, variantIndex);
+
+        availableOptions.forEach(option => {
+            const optionSpan = createVariantOption(variant._id, option, variantIndex);
+            optionsContainer.appendChild(optionSpan);
+        });
+
+        group.appendChild(optionsContainer);
+        return group;
+    }
+
+    function createVariantOption(variantId, option, variantIndex) {
+        const span = document.createElement('span');
+        span.className = 'variant-option';
+        span.textContent = option;
+        span.dataset.variantId = variantId;
+        span.dataset.value = option;
+
+        span.addEventListener('click', () => {
+            selectVariantOption(variantId, option, variantIndex);
+        });
+
+        return span;
+    }
+
+    function selectVariantOption(variantId, option, variantIndex) {
+        selectedVariants[variantId] = option;
+
+        updateVariantGroupUI(variantId, option);
+        resetSubsequentVariants(variantIndex);
+        updateNextVariantOptions(variantIndex);
+        updateProductInfo();
+    }
+
+    function updateVariantGroupUI(variantId, selectedOption) {
+        const group = document.querySelector(`.variant-group[data-variant-id="${variantId}"]`);
+        if (!group) return;
+
+        const options = group.querySelectorAll('.variant-option');
+        options.forEach(opt => {
+            if (opt.dataset.value === selectedOption) {
+                opt.classList.add('selected');
+            } else {
+                opt.classList.remove('selected');
+            }
+        });
+    }
+
+    function resetSubsequentVariants(currentIndex) {
+        for (let i = currentIndex + 1; i < PRODUCT.variants.length; i++) {
+            const variant = PRODUCT.variants[i];
+            delete selectedVariants[variant._id];
+
+            const group = document.querySelector(`.variant-group[data-variant-id="${variant._id}"]`);
+            if (group) {
+                const options = group.querySelectorAll('.variant-option');
+                options.forEach(opt => opt.classList.remove('selected'));
+            }
+        }
+    }
+    function updateNextVariantOptions(currentIndex) {
+        for (let i = currentIndex + 1; i < PRODUCT.variants.length; i++) {
+            const variant = PRODUCT.variants[i];
+            const group = document.querySelector(`.variant-group[data-variant-id="${variant._id}"]`);
+
+            if (group) {
+                const optionsContainer = group.querySelector('.variant-options');
+                optionsContainer.innerHTML = '';
+
+                const availableOptions = getAvailableOptions(variant._id, i);
+
+                availableOptions.forEach(option => {
+                    const optionSpan = createVariantOption(variant._id, option, i);
+                    optionsContainer.appendChild(optionSpan);
+                });
+
+                if (availableOptions.length === 1) {
+                    selectVariantOption(variant._id, availableOptions[0], i);
+                }
+            }
+        }
+    }
+
+    function updateProductInfo() {
+        const allSelected = PRODUCT.variants.every(v => selectedVariants[v._id]);
+
+        if (!allSelected) {
+            currentCombination = null;
+            return;
+        }
+
+        const matchingCombo = PRODUCT.variantCombinations.find(combo => {
+            return PRODUCT.variants.every(variant => {
+                const selectedValue = selectedVariants[variant._id];
+                return combo.variants.some(v =>
+                    v.variantId === variant._id && v.value === selectedValue
+                );
+            });
+        });
+
+        if (matchingCombo) {
+            currentCombination = matchingCombo;
+            window.matchingCombo = matchingCombo;
+
+            productPrice.innerText = formatPrice(matchingCombo.price);
+            const event = new CustomEvent('variantSelected', {
+                detail: {
+                    combination: matchingCombo,
+                    selectedVariants: selectedVariants
+                }
+            });
+            document.dispatchEvent(event);
+
+            updateProductDisplay(matchingCombo);
+        } else {
+            currentCombination = null;
+        }
+    }
+
+    function updateProductDisplay(combination) {
+        const priceElement = document.getElementById('product-price');
+        if (priceElement) {
+            priceElement.textContent = formatPrice(combination.price);
+        }
+
+        const stockElement = document.getElementById('product-stock');
+        if (stockElement) {
+            if (combination.stock > 0) {
+                stockElement.textContent = `Còn ${combination.stock} sản phẩm`;
+                stockElement.classList.remove('out-of-stock');
+            } else {
+                stockElement.textContent = 'Hết hàng';
+                stockElement.classList.add('out-of-stock');
+            }
+        }
+
+        if (combination.images && combination.images.length > 0) {
+            const mainImage = document.getElementById('main-product-image');
+            if (mainImage) {
+                mainImage.src = combination.images[0];
+            }
+        }
+    }
+
+    function formatPrice(price) {
+        if (isNaN(price)) return '0₫';
+        return Number(price).toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeVariants);
+    } else {
+        initializeVariants();
+    }
+</script>
+<script type="module" src="/javascripts/user/productDetail.module.js"></script>
+{{/ _wrappers/user-wrapper}}

@@ -1,0 +1,63 @@
+@font-face {
+  font-family: 'B3';
+  src: url('/fonts/b3-extrathin.otf') format('opentype');
+  font-weight: 100;
+  /* ExtraThin */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'B3';
+  src: url('/fonts/b3-thin.otf') format('opentype');
+  font-weight: 200;
+  /* Thin */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'B3';
+  src: url('/fonts/b3-light.otf') format('opentype');
+  font-weight: 300;
+  /* Light */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'B3';
+  src: url('/fonts/b3-regular.otf') format('opentype');
+  font-weight: 400;
+  /* Regular */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'B3';
+  src: url('/fonts/b3-semibold.otf') format('opentype');
+  font-weight: 600;
+  /* SemiBold */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'B3';
+  src: url('/fonts/b3-bold.otf') format('opentype');
+  font-weight: 700;
+  /* Bold */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'B3';
+  src: url('/fonts/b3-extrabold.otf') format('opentype');
+  font-weight: 800;
+  /* ExtraBold */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'B3';
+  src: url('/fonts/b3-black.otf') format('opentype');
+  font-weight: 900;
+  /* Black */
+  font-style: normal;
+}

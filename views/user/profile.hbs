@@ -1,0 +1,114 @@
+{{#> _wrappers/user-wrapper}}
+
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow">Hồ sơ tài khoản</p>
+        <h1>Trang cá nhân</h1>
+        <p>Xem thông tin cá nhân của bạn.</p>
+    </div>
+</section>
+
+
+<div class="profile-page">
+
+    <div class="profile-wrapper">
+
+        <div class="container profile-container">
+            <form class="form-card" id="profileForm" enctype="multipart/form-data">
+
+                <!-- Avatar bên trái -->
+                <div class="profile-avatar">
+
+                    {{!-- <i class="bi bi-person-circle default-avatar-icon"></i> --}}
+
+
+                    <img src="{{#if user.avatarUrl}}{{user.avatarUrl}}{{else}}/images/banner-modal.jpg{{/if}}"
+                        alt="Avatar" id="profileAvatar">
+
+
+                    <button type="button" class="change-avatar-btn">Đổi ảnh</button>
+                    <input type="file" id="avatarInput" name="avatar" accept="image/*" hidden>
+                </div>
+
+                <!-- Form thông tin bên phải -->
+                <div class="profile-info">
+
+                    <div class="form-group">
+                        <label>Họ tên</label>
+                        <input type="text" value="{{user.fullName}}" id="fullNameInput" name="fullName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" value="{{user.email}}" id="emailInput" name="email" disabled>
+                    </div>
+                    {{!--
+                    <div class="form-group">
+                        <label>Mật khẩu</label>
+                        <input type="password" placeholder="Nhập mật khẩu mới" id="passwordInput" name="password">
+                    </div> --}}
+
+                    <div class="form-group">
+                        <label>Thông tin nhận hàng</label>
+
+                        <input type="text" placeholder="Số điện thoại" id="shippingPhoneInput" name="phoneNumber"
+                            class="shipping-input" value="{{user.phoneNumber}}">
+
+                        <select id="shippingProvinceSelect" name="provinceId" data-user-value="{{user.provinceId}}">
+                            <option value="">Chọn tỉnh/thành phố</option>
+                        </select>
+
+                        <select id="shippingDistrictSelect" name="districtId" data-user-value="{{user.districtId}}">
+                            <option value="">Chọn quận</option>
+                        </select>
+
+                        <select id="shippingWardSelect" name="wardCode" data-user-value="{{user.wardCode}}">
+                            <option value="">Chọn phường/xã</option>
+                        </select>
+
+                        <input type="text" placeholder="Địa chỉ" id="shippingAddressInput" name="address"
+                            value="{{user.address}}" class="shipping-input">
+                    </div>
+
+                    <button type="submit" class="save-btn">Lưu thay đổi</button>
+
+                </div>
+            </form>
+            <form id="changePasswordForm" class="change-password-right form-card">
+
+                <div class="changePasswordForm-left">
+
+                </div>
+
+                <div class="changePasswordForm-right">
+                    <h3>Đổi mật khẩu</h3>
+
+                    <div class="form-group">
+                        <label>Mật khẩu hiện tại</label>
+                        <input type="password" name="oldPassword" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mật khẩu mới</label>
+                        <input type="password" name="newPassword" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nhập lại mật khẩu mới</label>
+                        <input type="password" name="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="save-btn">Cập nhật mật khẩu</button>
+
+                </div>
+
+
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="module" src="/javascripts/user/profile.module.js"></script>
+
+{{/ _wrappers/user-wrapper}}

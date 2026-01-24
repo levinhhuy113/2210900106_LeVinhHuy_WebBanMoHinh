@@ -1,0 +1,101 @@
+{{#> _wrappers/admin-wrapper}}
+
+
+<div class="categories-page">
+    <div class="page-header">
+        <h1 class="page-title">{{title}}</h1>
+
+    </div>
+
+    <div class="section animate-slide-in-up mt-2 section-filter">
+
+        <input type="text" class="filter-search fillter-btn" placeholder="Tìm kiếm tên người dùng"
+            value="{{currentFilters.q}}" onkeypress="if(event.key==='Enter'){ applySearch(); }">
+
+        <div class="filter-divider"></div>
+
+        <i class="bi bi-funnel-fill fillter-btn" id="applyFilterBtn"></i>
+    </div>
+
+
+    <div class="page-content">
+        <div class="section animate-slide-in-up mt-2">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="fit center">#</th>
+                        <th class="w-3">Tên người dùng</th>
+                        <th class="w-3">Email</th>
+                        <th class="w-3">Số điện thoại</th>
+                        <th class="fit center">Trạng thái</th>
+                        {{!-- <th class="fit center">Hành động</th> --}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#if users.length}}
+
+                    {{#each users}}
+                    <tr>
+                        <td class="fit center">{{plusOne @index}}</td>
+                        <td><span class="ellipsis line-2">{{this.fullName}}</span></td>
+                        <td><span class="ellipsis line-2">{{this.email}}</span></td>
+                        <td><span class="ellipsis line-2">{{this.phoneNumber}}</span></td>
+                        <td class="fit center">
+                            <div class="switch" data-active="{{#if this.status}}true{{else}}false{{/if}}"
+                                data-id="{{this._id}}">
+                                <div class="switch-slider"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+
+                    {{else}}
+                    <tr>
+                        <td colspan="5" class="center">Chưa có dữ liệu</td>
+                    </tr>
+                    {{/if}}
+
+                </tbody>
+            </table>
+        </div>
+
+
+        {{> _admin/pagination pagination=pagination currentSortField=currentSortField
+        currentSortOrder=currentSortOrder}}
+    </div>
+
+
+</div>
+
+<script type="module" src="/javascripts/admin/{{activePage}}.module.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.querySelector('.filter-search');
+        const filterBtn = document.getElementById('applyFilterBtn');
+
+        const applyFilters = () => {
+            const params = new URLSearchParams(window.location.search);
+            // Search
+            const q = searchInput.value.trim();
+            if (q) params.set('q', q);
+            else params.delete('q');
+
+            // Reset trang
+            params.set('page', '1');
+
+            window.location.search = params.toString();
+        };
+
+        // Click nút Apply
+        filterBtn.addEventListener('click', applyFilters);
+
+        // Nhấn Enter ở input search
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') applyFilters();
+        });
+    });
+
+
+</script>
+{{/ _wrappers/admin-wrapper}}

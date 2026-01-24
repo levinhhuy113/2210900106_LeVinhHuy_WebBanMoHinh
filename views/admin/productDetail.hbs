@@ -1,0 +1,381 @@
+{{#> _wrappers/admin-wrapper}}
+
+<div class="productDetail-page" data-id="{{product._id}}">
+    <button class="btn-back">
+        <i class="bi bi-arrow-left"></i>
+        <span>Sản phẩm</span>
+    </button>
+    <div class="page-header mt-1">
+        <h1 class="page-title ellipsis line-2">{{title}}</h1>
+        <button class="add-stockEntry-btn action-add-btn animate-slide-in-up">
+            <i class="bi bi-plus-circle"></i>
+            Thêm lô hàng
+        </button>
+    </div>
+
+    <div class="page-content">
+        <div class="section animate-slide-in-up mt-2">
+
+            <div class="product-info card p-3 mb-4">
+                <div class="gap-3">
+                 
+                    <div>
+                        <h4 id="product-name">{{product.name}}</h4>
+                        <p><strong>Giá bán:</strong> {{formatCurrency product.price}} </p>
+                        <p><strong>Danh mục:</strong> {{product.categoryId.name}}</p>
+                        <p><strong>Thương hiệu:</strong> {{product.brandId.name}}</p>
+                        <p><strong>Biến thể:</strong>
+                        <div id="hasVariants" data-id="{{product._id}}" class="switch mt-1"
+                            data-active="{{product.hasVariants}}" data-id="{{this._id}}">
+                            <div class="switch-slider"></div>
+                        </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="variants-section section animate-slide-in-up mt-2">
+
+            <div class="section-header">
+                <h3><i class="bi bi-layers-half"></i> Quản lý biến thể sản phẩm</h3>
+
+            </div>
+            <div class="tabs-container">
+                <button class="tab-btn active" data-tab="variants-tab">
+                    <i class="bi bi-tags"></i> Biến thể
+                </button>
+                <button class="tab-btn" data-tab="combinations-tab">
+                    <i class="bi bi-boxes"></i> Tổ hợp biến thể
+                </button>
+            </div>
+
+            <div id="variants-tab" class="tab-content active">
+                <div class="variant-types-container">
+                    <div class="add-variant-form"
+                    style="{{#if product.lockVariantActions}}display:none;{{/if}}"
+                    >
+                        <h4 style="margin-bottom: 16px; font-size: 14px; color: var(--color-text-primary);">
+                            <i class="bi bi-plus-circle"></i> Thêm biến thể mới
+                        </h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Tên biến thể</label>
+                                <input id="variantNameInput" type="text" class="form-control"
+                                    placeholder="Ví dụ: Màu sắc, Kích thước">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Các tùy chọn (cách nhau bằng dấu phẩy)</label>
+                                <input id="variantOptionsInput" type="text" class="form-control"
+                                    placeholder="Ví dụ: Đỏ, Xanh dương, Đen">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <button id="btnSaveVariant" data-id="{{product._id}}" class="btn btn-primary">
+                                <i class="bi bi-plus"></i> Thêm biến thể
+                            </button>
+                        </div>
+                    </div>
+                    <div id="variantList">
+
+                        {{!-- {{#each product.variants}}
+                        <div class="variant-type-card">
+                            <div class="variant-type-header" onclick="toggleVariantContent(this)">
+                                <div class="variant-type-info">
+                                    <span class="variant-type-name">{{this.name}}</span>
+                                    <span class="variant-count">{{this.}} tùy chọn</span>
+                                </div>
+                                <div class="variant-type-actions">
+                                    <button class="btn btn-sm btn-outline">
+                                        <i class="bi bi-pencil"></i> Sửa
+                                    </button>
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="variant-type-content">
+                                <div class="options-list">
+                                    <div class="option-tag">
+                                        Đỏ
+                                        <button class="remove-option">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                    </div>
+                                    <div class="option-tag">
+                                        Xanh dương
+                                        <button class="remove-option">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                    </div>
+                                    <div class="option-tag">
+                                        Đen
+                                        <button class="remove-option">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="add-option-form">
+                                    <input type="text" class="form-control-sm" placeholder="Nhập tùy chọn mới">
+                                    <button class="btn btn-success btn-sm">
+                                        <i class="bi bi-plus"></i> Thêm
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{/each}} --}}
+
+
+
+                    </div>
+                    <!-- Variant type 1: Màu sắc -->
+
+                </div>
+            </div>
+
+            <!-- Tab 2: Variant Combinations -->
+            <div id="combinations-tab" class="tab-content">
+                <div style="overflow-x: auto;">
+
+                    {{!-- <div class="add-combination-form">
+                        <h4 style="margin-bottom: 16px; font-size: 14px; color: var(--color-text-primary);">
+                            <i class="bi bi-plus-circle"></i> Thêm tổ hợp mới
+                        </h4>
+                        <div class="variant-selector" id="variantSelectors">
+                            <div class="select-wrapper">
+                                <label class="form-label">Màu sắc</label>
+                                <select class="form-control">
+                                    <option value="">Chọn màu</option>
+                                    <option value="red">Đỏ</option>
+                                    <option value="blue">Xanh dương</option>
+                                    <option value="black">Đen</option>
+                                </select>
+                            </div>
+                            <div class="select-wrapper">
+                                <label class="form-label">Kích thước</label>
+                                <select class="form-control">
+                                    <option value="">Chọn kích thước</option>
+                                    <option value="s">S</option>
+                                    <option value="m">M</option>
+                                    <option value="l">L</option>
+                                    <option value="xl">XL</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <button class="btn btn-primary" id="btnAddCombination" data-product-id="{{product._id}}">
+                                <i class="bi bi-plus"></i> Thêm tổ hợp
+                            </button>
+                        </div>
+                    </div> --}}
+
+                    <form class="add-combination-form" id="add-combination-form">
+                        <h4 style="margin-bottom: 16px; font-size: 14px; color: var(--color-text-primary);">
+                            <i class="bi bi-plus-circle"></i> Thêm tổ hợp mới
+                        </h4>
+                        <div class="variant-selector" id="variantSelectors">
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addCombinationImages">Ảnh sản phẩm <span class="error">*</span></label>
+                            <input class="mt-1" type="file" id="addCombinationImages" name="images" multiple
+                                accept="image/*" data-preview="#previewAddCombinationImages" />
+                            <div id="previewAddCombinationImages" class="image-preview"></div>
+                        </div>
+
+                        <div class="form-row mt-2">
+                            <button class="btn btn-primary" id="btnAddCombination" data-product-id="{{product._id}}">
+                                <i class="bi bi-plus"></i> Thêm tổ hợp
+                            </button>
+                        </div>
+                    </form>
+
+
+                    <table class="combinations-table">
+                        <thead>
+                            <tr>
+                                <th class="fit">Biến thể</th>
+                                <th>Hình ảnh</th>
+                                <th class="fit center">Giá bán</th>
+                                {{!-- <th class="fit center">Tồn kho</th> --}}
+                                <th class="fit center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="variant-tags-cell">
+                                    <div class="variant-select-cell">
+                                        <select class="variant-select">
+                                            <option value="red">Màu: Đỏ</option>
+                                            <option value="blue" selected>Màu: Xanh dương</option>
+                                            <option value="black">Màu: Đen</option>
+                                        </select>
+                                        <select class="variant-select">
+                                            <option value="s">Kích thước: S</option>
+                                            <option value="m">Kích thước: M</option>
+                                            <option value="l" selected>Kích thước: L</option>
+                                            <option value="xl">Kích thước: XL</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="images-cell">
+                                    <div class="image-preview">
+                                        <i class="bi bi-image"></i>
+                                    </div>
+                                    <div class="image-preview">
+                                        <i class="bi bi-image"></i>
+                                    </div>
+                                    <div class="image-preview">
+                                        <span>+2</span>
+                                    </div>
+                                </td>
+                                <td class="stock-cell stock-in">45</td>
+                                <td class="">
+                                    <button class="btn btn-sm btn-primary">
+                                        <i class="bi bi-check-lg"></i> Cập nhật
+                                    </button>
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div class="section animate-slide-in-up mt-2">
+
+
+            {{!-- <div class="stock-entries card shadow-sm"> --}}
+                {{!-- <h5 class="mb-3">Danh sách lô hàng</h5> --}}
+
+                {{#if stockEntries.length}}
+                <table class="table table-bordered align-middle">
+                    <thead>
+                        <tr>
+                            <th>Mã lô</th>
+                            <th>Biến thể</th>
+                            <th>Giá nhập</th>
+                            <th>Số lượng</th>
+                            <th>Còn lại</th>
+                            <th>Ngày nhập</th>
+                            <th>Trạng thái</th>
+                            <th>Ghi chú</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each stockEntries}}
+                        <tr>
+                            <td>{{this.batchCode}}</td>
+                            <td>{{this.variantKey}}</td>
+                            <td>{{formatCurrency this.importPrice}}</td>
+                            <td>{{this.quantity}}</td>
+                            <td>{{this.remainingQuantity}}</td>
+                            <td>{{formatDate this.importDate}}</td>
+                            <td>
+                                <div class="custom-select {{#if (or (eq status 'sold_out') (eq status 'discontinued'))}}disabled{{/if}}"
+                                    id="stockSelect_{{_id}}" data-value="{{status}}">
+                                    <button type="button" class="cs-trigger {{status}}" aria-haspopup="listbox"
+                                        aria-expanded="false">
+                                        <span class="cs-label">
+                                            {{#if (eq status 'sold_out')}}Hết hàng
+                                            {{else if (eq status 'discontinued')}}Ngừng bán
+                                            {{else}}{{translateStockStatus status}}{{/if}}
+                                        </span>
+                                        <i class="bi bi-caret-down-fill cs-caret"></i>
+                                    </button>
+                                    <div class="cs-options" role="listbox" tabindex="-1" aria-hidden="true">
+                                        {{#if (eq status 'draft')}}
+                                        <div class="cs-option {{#if (eq status 'draft')}}active{{/if}}"
+                                            data-value="draft">Nháp</div>
+                                        <div class="cs-option" data-value="imported">Đã nhập kho</div>
+                                        <div class="cs-option" data-value="cancelled">Đã hủy/Tạm dừng</div>
+                                        <div class="cs-option" data-value="discontinued">Ngừng bán</div>
+                                        {{else if (eq status 'cancelled')}}
+                                        <div class="cs-option" data-value="imported">Đã nhập kho</div>
+                                        <div class="cs-option" data-value="discontinued">Ngừng bán</div>
+                                        {{else if (eq status 'imported')}}
+                                        <div class="cs-option" data-value="cancelled">Đã hủy/Tạm dừng</div>
+                                        <div class="cs-option" data-value="discontinued">Ngừng bán</div>
+                                        {{/if}}
+                                    </div>
+                                </div>
+
+
+
+                            </td>
+                            <td>{{this.note}}</td>
+                            <td class="fit center">
+                                <div class="action-group">
+                                    <button
+                                        class="action-btn edit-btn {{#unless (eq this.status 'draft')}}disabled{{/unless}}"
+                                        data-id="{{this._id}}" title="Sửa thông tin">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <div class="action-divider"></div>
+
+                                    <button
+                                        class="action-btn delete-btn {{#unless (eq this.status 'draft')}}disabled{{/unless}}"
+                                        data-id="{{this._id}}" title="Xoá lô hàng">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+                {{else}}
+                <p class="text-muted" style="padding: 12px;">Chưa có lô hàng nào cho sản phẩm này.</p>
+                {{/if}}
+                {{!--
+            </div> --}}
+        </div>
+
+        {{> _admin/pagination pagination=pagination currentSortField=currentSortField
+        currentSortOrder=currentSortOrder}}
+
+
+
+
+        {{!-- {{> _admin/pagination pagination=pagination currentSortField=currentSortField
+        currentSortOrder=currentSortOrder}} --}}
+    </div>
+
+    {{> _admin/stockEntries/add}}
+
+    {{> _admin/stockEntries/edit}}
+</div>
+
+<script type="module" src="/javascripts/admin/productDetail.module.js"></script>
+
+<script>
+    document.querySelectorAll('.tab-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all tabs and tab contents
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Add active class to clicked tab
+            button.classList.add('active');
+
+            // Show corresponding tab content
+            const tabId = button.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+
+
+
+        });
+    });
+</script>
+
+{{/ _wrappers/admin-wrapper}}

@@ -1,0 +1,255 @@
+{{#> _wrappers/user-wrapper}}
+
+
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow">Thanh toán</p>
+        <h1>Hoàn tất đơn hàng</h1>
+        <p>Xác nhận thông tin và hoàn tất đơn mua của bạn.</p>
+    </div>
+</section>
+
+
+
+<main class="container section">
+    <div class="payment-grid">
+        <div class="payment-left">
+            <div class="payment-address">
+                <div class="payment-address-header">
+                    <h4>Thông tin nhận hàng</h4>
+                    {{!-- <button class="edit-btn">
+                        <i class="bi bi-pencil-square"></i>
+                    </button> --}}
+                    <a href="/profile?from=payment" class="btn-edit-info"> <i class="bi bi-pencil-square"></i></a>
+
+                </div>
+
+                <!-- Nhóm tên -->
+                <div class="info-row">
+                    <div class="info-left">
+                        <i class="bi bi-person-fill"></i>
+                        <span class="info-label">Tên:</span>
+                    </div>
+                    <div class="info-right">{{user.fullName}}</div>
+                </div>
+
+                <!-- Nhóm điện thoại -->
+                <div class="info-row">
+                    <div class="info-left">
+                        <i class="bi bi-telephone-fill"></i>
+                        <span class="info-label">SĐT:</span>
+                    </div>
+                    <div class="info-right">{{user.phoneNumber}}</div>
+                </div>
+
+                <!-- Nhóm địa chỉ -->
+                <div class="info-row">
+                    <div class="info-left">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span class="info-label">Địa chỉ:</span>
+                    </div>
+                    <div class="info-right">{{fullAddress}}</div>
+                </div>
+            </div>
+
+            <div class="payment-products">
+                <h4>Sản phẩm</h4>
+
+                <table class="table-payment">
+                    <thead>
+                        <tr>
+                            <th style="text-align: start;">Sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each items}}
+                        <tr>
+                            <td class="product-info">
+                                <img src="{{this.image}}" alt="{{this.name}}" class="product-img">
+                                <div class="product-name-category">
+                                    <span class="product-name">{{this.name}}</span>
+                                    {{#if this.combination}}
+                                    <span class="product-variant">{{this.combination.variantKey}}</span>
+                                    {{/if}}
+
+                                    <span class="product-category">{{this.category}}</span>
+                                </div>
+                            </td>
+                            {{!-- <td class="center">{{formatCurrency this.price}}</td>
+                            <td class="center">{{this.quantity}}</td>
+                            <td class="center">{{formatCurrency this.total}}</td> --}}
+                            {{#if this.isActive}}
+                            <td class="center">{{formatCurrency this.price}}</td>
+                            <td class="center">{{this.quantity}}</td>
+                            <td class="center">{{formatCurrency this.total}}</td>
+                            {{else}}
+                            <td class="center" colspan="3">
+                                Sản phẩm tạm ngừng kinh doanh / hết hàng, vui lòng chọn sản phẩm khác
+                            </td>
+                            {{/if}}
+
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="payment-summary">
+                <h3>Chi tiết thanh toán</h3>
+                <div class="summary-row">
+                    <span>Tổng sản phẩm:</span>
+                    <strong>{{items.length}}</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Tạm tính:</span>
+                    <strong>{{formatCurrency totalAmount}}</strong>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Tổng thanh toán:</span>
+                    <strong>{{formatCurrency totalAmount}}</strong>
+                </div>
+                {{!-- <a class="btn ghost" href="/cart" style="margin-top:12px;">Quay lại giỏ hàng</a> --}}
+
+            </div>
+
+        </div>
+        <div class="payment-right">
+
+            <div class="payment-method">
+                <h3>Phương thức thanh toán</h3>
+                <form id="paymentForm" action="/payment/create" method="POST">
+                    {{!-- <input type="hidden" name="productIds" id="productIds" value='{{productIds}}'> --}}
+                    <input type="hidden" name="selectedIndexes" id="selectedIndexes" value='{{selectedIndexes}}'>
+
+                    <div>
+                        <input type="radio" name="paymentType" value="cod" id="payCOD" checked>
+                        <label for="payCOD">Thanh toán khi nhận hàng</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="paymentType" value="vnpay" id="payVNPAY">
+                        <label for="payVNPAY">Thanh toán qua VNPAY</label>
+                    </div>
+
+                    <!-- Khu vực mô tả thanh toán online (ẩn mặc định) -->
+                    <div id="vnpayInfo" style="display: none; margin-top: 1rem;">
+                        <p>Bạn sẽ được chuyển hướng đến <strong>VNPAY Sandbox</strong> để hoàn tất thanh toán.</p>
+                        <img src="/images/vnp-logo.svg" alt="VNPAY" class="vnpay-logo">
+                    </div>
+
+                    <input type="hidden" id="isBuyNow" value="{{isBuyNow}}">
+                    <input type="hidden" id="buyNowProductId" value="{{buyNowProductId}}">
+                    <input type="hidden" id="buyNowQuantity" value="{{buyNowQuantity}}">
+
+                    <div class="payment-form">
+                        <button type="submit" id="checkoutBtn" class="btn primary mt-1">
+                            <i class="bi bi-basket2"></i>
+                            Đặt hàng
+                        </button>
+                        <a class="btn ghost" href="/cart" style="margin-top:12px; width: 100%;">
+                            <i class="bi bi-box-arrow-left"></i>
+                            Quay lại giỏ hàng
+                        </a>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const payCOD = document.getElementById("payCOD");
+        const payVNPAY = document.getElementById("payVNPAY");
+        const vnpayInfo = document.getElementById("vnpayInfo");
+
+        function toggleVnpay() {
+            if (payVNPAY.checked) {
+                vnpayInfo.style.display = "block";
+            } else {
+                vnpayInfo.style.display = "none";
+            }
+        }
+        window.addEventListener("pageshow", (event) => {
+            if (performance.getEntriesByType("navigation")[0].type === "back_forward") {
+                console.log("Show")
+                window.location.reload();
+            }
+        });
+
+        payCOD.addEventListener("change", toggleVnpay);
+        payVNPAY.addEventListener("change", toggleVnpay);
+
+        document.getElementById('checkoutBtn').addEventListener('click', async function (e) {
+            e.preventDefault();
+
+            const isBuyNow = document.getElementById('isBuyNow').value === "true";
+
+            const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+
+            try {
+                showLoading("Đang tạo đơn hàng...");
+
+                let res, result;
+
+                if (isBuyNow) {
+                    const productId = document.getElementById('buyNowProductId').value;
+                    const quantity = parseInt(document.getElementById('buyNowQuantity').value) || 1;
+
+                    res = await fetch('/api/payment/buy-now', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            productId,
+                            quantity,
+                            paymentType
+                        })
+                    });
+
+                    result = await res.json();
+
+                } else {
+                    const selectedIndexInput = document.getElementById('selectedIndexes').value;
+                    const selectedIndexes = selectedIndexInput
+                        .split(',')
+                        .map(i => Number(i)); // [0, 2, 3, 4]
+
+                    res = await fetch('/api/payment/create', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ selectedIndexes, paymentType })
+                    });
+
+                    result = await res.json();
+                }
+                hideLoading();
+
+                if (result.success) {
+                    showToast(result.message || "Đơn hàng tạo thành công", "success");
+
+                    if (result.data?.paymentUrl) {
+                        window.location.href = result.data.paymentUrl;
+                    } else {
+                        setTimeout(() => window.location.reload(), 1000);
+                    }
+                } else {
+                    showToast(result.message || "Tạo đơn hàng thất bại", "warning");
+                }
+            } catch (err) {
+                hideLoading();
+                console.error(err);
+                showToast("Có lỗi xảy ra khi tạo đơn hàng", "error");
+            }
+        });
+
+
+    });
+
+</script>
+
+{{/ _wrappers/user-wrapper}}

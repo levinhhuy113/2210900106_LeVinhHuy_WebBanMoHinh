@@ -1,0 +1,195 @@
+{{#> _wrappers/admin-wrapper}}
+
+<div class="orders-page">
+    <div class="page-header">
+        <h1 class="page-title">{{title}}</h1>
+    </div>
+
+    <div class="page-content">
+
+        <div class="section animate-slide-in-up mt-2 section-filter">
+            <!-- Trạng thái -->
+            <select class="filter-select fillter-btn" id="statusFilter"
+                onchange="location = '?status=' + this.value + '&paymentMethod={{currentFilters.paymentMethod}}'">
+                <option value="" {{#unless currentFilters.status}}selected{{/unless}}>Tất cả trạng thái</option>
+                <option value="pending" {{#if (eq currentFilters.status "pending" )}}selected{{/if}}>Chờ duyệt</option>
+                <option value="confirmed" {{#if (eq currentFilters.status "confirmed" )}}selected{{/if}}>Đã xác nhận
+                </option>
+                <option value="preparing" {{#if (eq currentFilters.status "preparing" )}}selected{{/if}}>Đang chuẩn bị
+                </option>
+                <option value="shipping" {{#if (eq currentFilters.status "shipping" )}}selected{{/if}}>Đang giao
+                </option>
+                <option value="delivered" {{#if (eq currentFilters.status "delivered" )}}selected{{/if}}>Đã giao
+                </option>
+                <option value="cancelled" {{#if (eq currentFilters.status "cancelled" )}}selected{{/if}}>Đã hủy</option>
+            </select>
+
+            <div class="filter-divider"></div>
+
+            <select class="filter-select fillter-btn" id="paymentFilter"
+                onchange="location = '?status={{currentFilters.status}}&paymentMethod=' + this.value">
+                <option value="" {{#unless currentFilters.paymentMethod}}selected{{/unless}}>Tất cả phương thức</option>
+                <option value="cod" {{#if (eq currentFilters.paymentMethod "cod" )}}selected{{/if}}>COD</option>
+                <option value="vnpay" {{#if (eq currentFilters.paymentMethod "vnpay" )}}selected{{/if}}>VNPay</option>
+            </select>
+
+            <div class="filter-divider"></div>
+
+            <input type="text" class="filter-search fillter-btn" placeholder="Tìm kiếm mã đơn hoặc tên người nhận"
+                value="{{currentFilters.q}}" onkeypress="if(event.key==='Enter'){ applySearch(); }">
+
+            <div class="filter-divider"></div>
+
+            <i class="bi bi-funnel-fill fillter-btn" id="applyFilterBtn"></i>
+        </div>
+
+
+        <div class="section animate-slide-in-up mt-2">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="fit center">#</th>
+                        <th class="fit center">Mã đơn</th>
+                        <th class="center">Người nhận</th>
+                        <th class="center">Số điện thoại</th>
+                        <th class="git center">Tổng tiền</th>
+                        <th class="fit center">Phương thức thanh toán</th>
+                        <th class="fit center">Trạng thái</th>
+                        <th class="fit center">Hành động</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {{#if orders.length}}
+
+                    {{#each orders}}
+                    <tr>
+
+                        <!-- STT -->
+                        <td class="fit center">{{plusOne @index}}</td>
+
+                        <!-- Mã đơn -->
+                        <td class="fit center">
+                            <span class="ellipsis">{{this.orderCode}}</span>
+                        </td>
+
+                        <!-- Người nhận -->
+                        <td class="center">
+                            <strong class="ellipsis line-2">{{this.toName}}</strong>
+                        </td>
+
+                        <!-- Số điện thoại -->
+                        <td class="center">
+                            <span class="ellipsis">{{this.toPhone}}</span>
+                        </td>
+
+                        <!-- Tổng tiền -->
+                        <td class="fit center">
+                            <span>{{formatCurrency this.totalPrice}}</span>
+                        </td>
+
+                        <!-- Phương thức thanh toán -->
+                        <td class="fit center">
+                            {{#if this.paymentMethod}}
+                            {{this.paymentMethod}} <!-- Nếu muốn chữ đầu viết hoa -->
+                            {{else}}
+                            COD <!-- mặc định -->
+                            {{/if}}
+                        </td>
+
+                        <!-- Trạng thái -->
+                        <td class="fit center">
+                            <span class="status-badge status-{{this.status}}">
+                                {{formatOrderStatus this.status}}
+                            </span>
+                        </td>
+
+                        <!-- Action -->
+                        <td class="fit center">
+                            <div class="action-group">
+
+
+
+                                <!-- Nút chỉnh trạng thái -->
+                                {{!-- <button class="action-btn edit-btn" data-id="{{this._id}}"
+                                    title="Cập nhật trạng thái">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button> --}}
+                                {{!-- <div class="action-divider"></div> --}}
+
+                                <!-- Xem chi tiết -->
+                                <a href="/admin/orders/{{this._id}}" class="action-btn detail-btn" title="Xem chi tiết">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </div>
+                        </td>
+
+                    </tr>
+                    {{/each}}
+
+                    {{else}}
+                    <tr>
+                        <td colspan="6" class="center">Chưa có đơn hàng nào</td>
+                    </tr>
+                    {{/if}}
+
+                </tbody>
+            </table>
+        </div>
+
+
+        {{> _admin/pagination pagination=pagination currentSortField=currentSortField
+        currentSortOrder=currentSortOrder}}
+    </div>
+
+    {{> _admin/products/add}}
+
+    {{> _admin/products/edit}}
+</div>
+
+
+<script type="module" src="/javascripts/admin/{{activePage}}.module.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const statusSelect = document.getElementById('statusFilter');
+    const paymentSelect = document.getElementById('paymentFilter');
+    const searchInput = document.querySelector('.filter-search');
+    const filterBtn = document.getElementById('applyFilterBtn');
+
+    const applyFilters = () => {
+        const params = new URLSearchParams(window.location.search);
+
+        // Trạng thái
+        const status = statusSelect.value;
+        if (status) params.set('status', status);
+        else params.delete('status');
+
+        // Phương thức thanh toán
+        const payment = paymentSelect.value;
+        if (payment) params.set('paymentMethod', payment);
+        else params.delete('paymentMethod');
+
+        // Search
+        const q = searchInput.value.trim();
+        if (q) params.set('q', q);
+        else params.delete('q');
+
+        // Reset trang
+        params.set('page', '1');
+
+        window.location.search = params.toString();
+    };
+
+    // Click nút Apply
+    filterBtn.addEventListener('click', applyFilters);
+
+    // Nhấn Enter ở input search
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') applyFilters();
+    });
+});
+</script>
+
+
+{{/ _wrappers/admin-wrapper}}

@@ -1,0 +1,26 @@
+<div class="admin-sidebar">
+    <h1 class="admin-logo">
+        {{!-- <i class="bi bi-shop"></i> --}}
+        HuyToys - Admin
+    </h1>
+
+    <nav class="admin-nav">
+        <ul>
+            {{#each adminMenu}}
+            <li>
+                <a href="{{this.path}}" class="sidebar-item {{#if (eq ../activePage this.key)}}active{{/if}}">
+                    <i class="bi {{this.icon}}"></i>
+                    {{this.label}}
+                </a>
+            </li>
+            {{/each}}
+        </ul>
+
+        <div class="logout-section">
+            <a href="#" id="logoutLink">
+                <i class="bi bi-box-arrow-right"></i>
+                Đăng xuất
+            </a>
+        </div>
+    </nav>
+</div>

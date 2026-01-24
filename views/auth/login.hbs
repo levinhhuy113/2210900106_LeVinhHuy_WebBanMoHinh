@@ -1,0 +1,151 @@
+{{#> _wrappers/auth-wrapper}}
+
+
+<main class="auth-body">
+    <div class="auth-box">
+        <p class="eyebrow">Chào mừng trở lại</p>
+        <h1>Đăng nhập</h1>
+        <form id="loginForm" data-validate>
+            <div>
+                <label for="login-email">Email</label>
+                <input id="login-email" name="email" type="email" placeholder="ban@example.com" required>
+            </div>
+            <div>
+                <label for="login-password">Mật khẩu</label>
+                <input id="login-password" name="password" type="password" placeholder="••••••••" required>
+            </div>
+            <div class="forgot-password">
+                <a id="forgotPasswordBtn">Quên mật khẩu?</a>
+            </div>
+            <button class="btn primary" type="submit">Đăng nhập</button>
+        </form>
+        <div id="resendWrapper" class="mt-3">
+            <p class="mb-1" id="resendMessage">
+                Tài khoản chưa xác nhận. Bạn có thể gửi lại mã xác nhận.
+            </p>
+            <button type="button" id="resendBtn" class="btn primary btn-outline-warning">Gửi lại mã</button>
+        </div>
+
+        <p class="helper">Người mới? <a href="/register">Tạo tài khoản</a></p>
+    </div>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById('loginForm');
+        const resendWrapper = document.getElementById('resendWrapper');
+        const resendBtn = document.getElementById('resendBtn');
+        const resendMessage = document.getElementById('resendMessage');
+        let currentEmail = '';
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const email = formData.get('email').trim();
+            const password = formData.get('password');
+
+            currentEmail = email; // lưu lại email hiện tại để gửi lại
+
+            if (!email || !password) {
+                return showToast('Vui lòng nhập đầy đủ email và mật khẩu', 'error');
+            }
+
+            try {
+                showLoading('Đang đăng nhập...');
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+                hideLoading();
+                if (data.success) {
+                    setSessionToast(data.message || 'Đăng nhập thành công!', 'success');
+                    window.location.href = '/';
+                } else {
+                    showToast(data.message || 'Đăng nhập thất bại!', 'error');
+                    if (data.code === 403) {
+                        resendWrapper.classList.add('show');
+                        resendMessage.innerText = data.message || 'Tài khoản chưa xác nhận. Bạn có thể gửi lại mã xác nhận.';
+                    } else {
+                        showToast(data.message || 'Đăng nhập thất bại', 'error');
+                        resendWrapper.classList.remove('show');
+                    }
+                }
+
+            } catch (err) {
+                hideLoading();
+                showToast('Đã xảy ra lỗi. Vui lòng thử lại.', 'error');
+            }
+        });
+
+        resendBtn.addEventListener('click', async () => {
+            if (!currentEmail) return;
+
+            try {
+                showLoading('Đang gửi lại mã xác nhận...');
+                const res = await fetch('/api/resend-verification', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: currentEmail })
+                });
+
+                const data = await res.json();
+                hideLoading();
+
+                if (data.code === 201) {
+                    showToast(data.message || 'Đã gửi lại mã xác nhận. Vui lòng kiểm tra email.', 'success');
+                } else {
+                    resendMessage.innerText = data.message || 'Tài khoản chưa xác nhận. Bạn có thể gửi lại mã xác nhận.';
+                    showToast(data.message || 'Không thể gửi lại mã. Vui lòng thử lại sau.', 'error');
+                }
+            } catch (err) {
+                hideLoading();
+                showToast('Đã xảy ra lỗi. Vui lòng thử lại.', 'error');
+            }
+        });
+
+        const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+
+        forgotPasswordBtn.addEventListener('click', async () => {
+            const emailInput = document.getElementById('login-email');
+            const email = emailInput.value.trim();
+
+            if (!email) {
+                return showToast('Vui lòng nhập email trước khi đặt lại mật khẩu.', 'error');
+            }
+
+            try {
+                showLoading('Đang gửi liên kết đặt lại mật khẩu...');
+                const res = await fetch('/api/request-reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await res.json();
+                hideLoading();
+
+                if (data.success) {
+                    showToast(
+                        data.message || 'Nếu email tồn tại, liên kết đặt lại mật khẩu đã được gửi.',
+                        'success'
+                    );
+                } else {
+                    showToast(data.message || 'Không thể gửi yêu cầu đặt lại mật khẩu.', 'error');
+                }
+
+            } catch (err) {
+                hideLoading();
+                showToast('Đã xảy ra lỗi. Vui lòng thử lại.', 'error');
+            }
+        });
+
+
+    });
+</script>
+
+
+{{/ _wrappers/auth-wrapper}}

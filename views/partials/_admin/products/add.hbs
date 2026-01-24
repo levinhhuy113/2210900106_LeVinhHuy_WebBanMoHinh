@@ -1,0 +1,70 @@
+<div id="modalAddProduct" class="modal-wrapper">
+    <div class="modal-overlay"></div>
+    <div class="modal-panel">
+        <div class="modal-header">
+            <h3>Thêm Sản phẩm</h3>
+            <button class="modal-close"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <hr>
+        <div class="modal-body">
+            <form id="formAddProduct">
+                <div class="form-group">
+                    <label for="addProductName">Tên sản phẩm <span class="error">*</span></label>
+                    <input type="text" id="addProductName" name="name" required />
+                </div>
+                <div class="form-group" id="form-group-add-price">
+                    <label for="addProductPrice">Giá bán (VNĐ) <span class="error">*</span></label>
+                    <input type="number" id="addProductPrice" name="price" min="0" step="1000" required />
+                </div>
+                <div class="form-group">
+                    <label for="addProductCategory">Danh mục <span class="error">*</span></label>
+                    <select id="addProductCategory" name="categoryId" required>
+                        <option value="">-- Chọn danh mục --</option>
+                        {{#each allCategories}}
+                        <option value="{{this._id}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addProductBrand">Thương hiệu <span class="error">*</span></label>
+                    <select id="addProductBrand" name="brandId" required>
+                        <option value="">-- Chọn thương hiệu --</option>
+                        {{#each allBrands}}
+                        <option value="{{this._id}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="addProductHasVariants" name="hasVariants" />
+                        Sản phẩm có biến thể (màu sắc, kích thước...)
+                    </label>
+                </div>
+                <div class="form-group" id="addProductImagesGroup">
+                    <label for="addProductImages">Ảnh sản phẩm <span class="error">*</span></label>
+                    <input type="file" id="addProductImages" name="images" multiple accept="image/*"
+                        data-preview="#previewAddProductImages" />
+                    <div id="previewAddProductImages" class="image-preview"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="addProductIntro">Giới thiệu</label>
+                    <textarea id="addProductIntro" name="productInfo" rows="3"
+                        placeholder="Giới thiệu ngắn về sản phẩm..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="addProductUsage">Gợi ý trưng bày</label>
+                    <textarea id="addProductUsage" name="usage" rows="3"
+                        placeholder="Ví dụ: Kết hợp với bình gốm khác, đặt trong phòng khách, gần ánh sáng tự nhiên..."></textarea>
+                </div>
+
+                <hr>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Thêm</button>
+                    <button type="button" class="btn-secondary modal-close">Huỷ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+{{#> _wrappers/admin-wrapper}}
+
+
+<div class="categories-page">
+    <div class="page-header">
+        <h1 class="page-title">{{title}}</h1>
+        <button class="add-category-btn action-add-btn animate-slide-in-up">
+            <i class="bi bi-plus-circle"></i>
+            Thêm danh mục
+        </button>
+    </div>
+
+    <div class="page-content">
+        <div class="section animate-slide-in-up mt-2">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="fit center">#</th>
+                        <th class="w-3">Tên danh mục</th>
+                        <th class="fit center">Hiển thị</th>
+                        <th class="fit center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#if categories.length}}
+
+                    {{#each categories}}
+                    <tr>
+                        <td class="fit center">{{plusOne @index}}</td>
+                        <td><span class="ellipsis line-2">{{this.name}}</span></td>
+                        <td class="fit center">
+                            <div class="switch" data-active="{{this.isActive}}" data-id="{{this._id}}">
+                                <div class="switch-slider"></div>
+                            </div>
+                        </td>
+
+                        <td class="fit center">
+                            <div class="action-group">
+                                <button class="action-btn edit-btn" data-id="{{this._id}}" title="Sửa thông tin">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <div class="action-divider"></div>
+                                <button class="action-btn delete-btn {{#unless this.isDelete}}disabled{{/unless}}" data-id="{{this._id}}" title="Xoá danh mục">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+
+                    {{else}}
+                    <tr>
+                        <td colspan="5" class="center">Chưa có dữ liệu</td>
+                    </tr>
+                    {{/if}}
+
+                </tbody>
+            </table>
+        </div>
+
+
+        {{> _admin/pagination pagination=pagination currentSortField=currentSortField
+        currentSortOrder=currentSortOrder}}
+    </div>
+
+    {{> _admin/categories/add}}
+
+    {{> _admin/categories/edit}}
+
+</div>
+
+<script type="module" src="/javascripts/admin/{{activePage}}.module.js"></script>
+
+{{/ _wrappers/admin-wrapper}}

@@ -1,0 +1,125 @@
+{{#> _wrappers/user-wrapper}}
+
+
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow">Chi tiết đơn hàng</p>
+        <h1>Thông tin đơn hàng</h1>
+        <p>Xem chi tiết sản phẩm, thanh toán và trạng thái đơn hàng.</p>
+    </div>
+</section>
+
+<main class="container section">
+    <div class="payment-grid">
+        <div class="payment-left">
+            <div class="payment-address">
+                <div class="payment-address-header">
+                    <h4>Thông tin nhận hàng</h4>
+                </div>
+
+                <!-- Nhóm tên -->
+                <div class="info-row">
+                    <div class="info-left">
+                        <i class="bi bi-person-fill"></i>
+                        <span class="info-label">Tên:</span>
+                    </div>
+                    <div class="info-right">{{user.fullName}}</div>
+                </div>
+
+                <!-- Nhóm điện thoại -->
+                <div class="info-row">
+                    <div class="info-left">
+                        <i class="bi bi-telephone-fill"></i>
+                        <span class="info-label">SĐT:</span>
+                    </div>
+                    <div class="info-right">{{user.phoneNumber}}</div>
+                </div>
+
+                <!-- Nhóm địa chỉ -->
+                <div class="info-row">
+                    <div class="info-left">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span class="info-label">Địa chỉ:</span>
+                    </div>
+                    <div class="info-right">{{fullAddress}}</div>
+                </div>
+            </div>
+
+            <div class="payment-products">
+                <h4>Sản phẩm</h4>
+
+                <table class="table-payment">
+                    <thead>
+                        <tr>
+                            <th style="text-align: start;">Sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each items}}
+                        <tr>
+                            <td class="product-info">
+                                <img src="{{this.image}}" alt="{{this.name}}" class="product-img">
+                                <div class="product-name-category">
+                                    <div class="p-name">{{this.name}}</div>
+                                    {{#if this.variantKey}}
+                                    <span class="p-variant">{{this.variantKey}}</span>
+                                    {{/if}}
+                                    <div class="p-category">Danh mục: {{this.categoryName}}</div>
+                                </div>
+                            </td>
+                            <td class="center">{{formatCurrency this.price}}</td>
+                            <td class="center">{{this.quantity}}</td>
+                            <td class="center">{{formatCurrency this.total}}</td>
+
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="payment-summary" style="margin-top: 24px;">
+                <h3>Chi tiết thanh toán</h3>
+
+                <div class="summary-row">
+                    <span>Tổng sản phẩm:</span>
+                    <strong>{{items.length}}</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Tạm tính:</span>
+                    <strong>{{formatCurrency totalAmount}}</strong>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Tổng thanh toán:</span>
+                    <strong>{{formatCurrency totalAmount}}</strong>
+                </div>
+
+            </div>
+        </div>
+        <div class="payment-right">
+            <div class="payment-summary">
+                <h3>Trạng thái đơn hàng</h3>
+
+                <div class="summary-row">
+                    <span>Trạng thái thanh toán:</span>
+                    <strong> {{#if (eq order.paymentStatus "unpaid")}}Chưa thanh toán{{/if}}
+                        {{#if (eq order.paymentStatus "paid")}}Đã thanh toán{{/if}}
+                        {{#if (eq order.paymentStatus "refunded")}}Đã hoàn tiền{{/if}}</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Trạng thái đơn:</span>
+                    <strong> {{formatOrderStatus order.status}}</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Thời gian đặt:</span>
+                    <strong> {{formatDate order.createdAt "HH:mm DD/MM/YYYY"}}</strong>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+{{/ _wrappers/user-wrapper}}

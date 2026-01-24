@@ -1,0 +1,66 @@
+{{#> _wrappers/user-wrapper}}
+
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow">GIỎ HÀNG CỦA BẠN</p>
+        <h1>Sẵn sàng để Thanh toán</h1>
+        <p>Điều chỉnh số lượng hoặc tiếp tục mua sắm trước khi thanh toán.</p>
+    </div>
+</section>
+
+<main class="container section">
+    <div class="cart-grid">
+        <div class="table-responsive">
+            <div class="cart-table" id="cartItems">
+                {{!-- <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead> --}}
+                {{!-- <tbody id="cartItems">
+                    <tr>
+                        <td>RX-93 Nu Gundam Ver.Ka</td>
+                        <td>$189.00</td>
+                        <td><input class="quantity-input" type="number" min="0" value="1" data-price="189"></td>
+                        <td>$189.00</td>
+                        <td><button class="icon-btn" aria-label="Remove"><i class="bi bi-x-lg"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td>LED Display Base</td>
+                        <td>$39.00</td>
+                        <td><input class="quantity-input" type="number" min="0" value="2" data-price="39"></td>
+                        <td>$78.00</td>
+                        <td><button class="icon-btn" aria-label="Remove"><i class="bi bi-x-lg"></i></button></td>
+                    </tr>
+                </tbody> --}}
+            </div>
+        </div>
+        <div class="summary">
+            <h3>Tóm tắt đơn hàng</h3>
+            <div class="summary-row">
+                <span>Tổng sản phẩm</span>
+                <strong id="totalQuantity">$0.00</strong>
+            </div>
+            {{!-- <div class="summary-row">
+                <span>Shipping</span>
+                <strong id="shipping">$0.00</strong>
+            </div> --}}
+            <div class="summary-row total">
+                <span>Tổng tiền thanh toán:</span>
+                <strong id="totalPrice">$0.00</strong>
+            </div>
+            <div class="promo-actions" style="margin-top:12px;">
+                <a class="btn ghost" href="/products">Tiếp tục mua sắm</a>
+                <button class="btn primary" id="checkoutBtn">Mua hàng</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script type="module" src="/javascripts/user/cart.module.js"></script>
+
+{{/ _wrappers/user-wrapper}}

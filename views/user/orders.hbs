@@ -1,0 +1,205 @@
+{{#> _wrappers/user-wrapper}}
+
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow">Lịch sử đơn hàng</p>
+        <h1>Đơn hàng của tôi</h1>
+        <p>Theo dõi trạng thái các đơn hàng bạn đã đặt.</p>
+    </div>
+</section>
+
+
+
+<main class="container section">
+    <div class="orders-list">
+
+        {{#if orders.length}}
+
+        {{#each orders}}
+        <div class="order-item">
+
+            <div class="order-item-header">
+                <div class="order-code">
+                    Mã đơn: <span>{{orderCode}}</span>
+                </div>
+                <div class="order-status">
+                    <span class="status-badge status-{{status}}">
+                        Trạng thái: {{formatOrderStatus status}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="order-products">
+                <table class="order-products-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Sản phẩm</th>
+                            <th class="center fit">Giá</th>
+                            <th class="center fit">Số lượng</th>
+                            <th class="center fit">Thành tiền</th>
+                            {{#if (eq this.status "delivered")}}
+                            <th class="center fit">Thao tác</th>
+
+                            {{/if}}
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {{#each this.items}}
+                        <tr>
+                            <td class="product-info-cell">
+                                <img src="{{this.image}}" alt="{{this.name}}" class="product-img">
+                                <div class="product-details">
+                                    <div class="p-name">{{this.name}}</div>
+                                    {{#if this.variantKey}}
+                                    <span class="p-variant">{{this.variantKey}}</span>
+                                    {{/if}}
+                                    <div class="p-category">Danh mục: {{this.categoryName}}</div>
+                                </div>
+                            </td>
+                            <td class="center fit">{{formatCurrency this.price}}</td>
+                            <td class="center fit">{{this.qty}}</td>
+                            <td class="center fit">{{formatCurrency this.total}}</td>
+
+
+                            {{#if (eq ../status "delivered")}}
+                            <td class="center fit">
+                                {{#if this.reviewed}}
+                                <button class="btn btn-secondary btn-review btn-review-disabled" disabled>Đã đánh giá</button>
+                                {{else}}
+                                <button class="btn btn-primary btn-review" data-order-id="{{../_id}}"
+                                    data-item-id="{{this._id}}" data-product-id="{{this.productId}}" data-variant-combination-id="{{this.variantCombinationId}}">
+                                    Đánh giá
+                                </button>
+                                {{/if}}
+                            </td>
+                            {{/if}}
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="order-item-footer">
+                <div class="order-summary">
+                    Thành tiền: <br><strong>{{formatCurrency totalPrice}}</strong>
+                </div>
+                <div class="order-actions">
+
+                    {{#if canCancel}}
+                    <button class="btn btn-cancel" data-id="{{_id}}">Huỷ đơn hàng</button>
+                    {{/if}}
+                    {{#if canPay}}
+                    <a href="{{this.paymentUrl}}" class="btn btn-payment">Thanh toán</a>
+                    {{/if}}
+
+
+
+                    <a href="/orders/{{_id}}" class="btn btn-detail">Xem chi tiết đơn hàng</a>
+                </div>
+            </div>
+
+        </div>
+        {{/each}}
+
+        {{else}}
+
+        <div class="no-orders">
+            <p>Bạn chưa có đơn hàng nào. Hãy khám phá sản phẩm và trải nghiệm mua sắm nhé!</p>
+        </div>
+
+        {{/if}}
+
+    </div>
+</main>
+
+<div class="review-wrapper d-none" id="reviewModal">
+    <div class="review-overlay"></div>
+    <div class="review-panel">
+        <div class="review-header">
+            <h3>Chia sẻ cảm nhận của bạn</h3>
+            <p>Hãy để lại vài dòng về trải nghiệm cùng sản phẩm của chúng tôi. Ý kiến của bạn sẽ giúp BranDeco hoàn
+                thiện hơn mỗi ngày.</p>
+        </div>
+        <div class="review-rating">
+            <div class="stars">
+
+                <div class="star-item" data-value="1">
+                    <div class="star-icons">
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <span class="star-text">Tệ</span>
+                </div>
+
+                <div class="star-item" data-value="2">
+                    <div class="star-icons">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <span class="star-text">Kém</span>
+                </div>
+
+                <div class="star-item" data-value="3">
+                    <div class="star-icons">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <span class="star-text">Bình thường</span>
+                </div>
+
+                <div class="star-item" data-value="4">
+                    <div class="star-icons">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <span class="star-text">Hài lòng</span>
+                </div>
+
+                <div class="star-item selected" data-value="5">
+                    <div class="star-icons">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <span class="star-text">Rất hài lòng</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="review-comment">
+            <label for="reviewTextarea">Viết đôi dòng chia sẻ cảm nhận của bạn về sản phẩm này...</label>
+            <textarea id="reviewTextarea" rows="4" placeholder="Chia sẻ cảm nhận..."></textarea>
+        </div>
+
+        <div class="review-images">
+            <label>Hãy chia sẻ hình ảnh sản phẩm trong không gian của bạn!</label>
+            <div class="review-images-wrap">
+                <button type="button" id="reviewUploadBtn">Tải ảnh lên <br><i class="bi bi-image"></i></button>
+                <input type="file" id="reviewImagesInput" accept="image/*" multiple hidden>
+                <div class="review-images-preview"></div>
+            </div>
+
+        </div>
+
+        <div class="review-footer">
+            <button type="button" class="btn btn-cancel" id="reviewCancelBtn">Quay lại</button>
+            <button type="button" class="btn btn-submit" id="reviewSubmitBtn">Gửi đánh giá <i
+                    class="bi bi-arrow-right"></i></button>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+<script type="module" src="/javascripts/user/orders.module.js"></script>
+
+{{/ _wrappers/user-wrapper}}

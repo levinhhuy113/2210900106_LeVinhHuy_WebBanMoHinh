@@ -1,0 +1,60 @@
+{{#> _wrappers/user-wrapper}}
+
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow">Danh mục</p>
+        <h1>Mô hình sưu tầm</h1>
+        <p>Lọc theo dòng sản phẩm hoặc sắp xếp theo giá để tìm mô hình bạn muốn.</p>
+        <div class="filters">
+            <form action="/products" method="GET" class="form-search">
+                <input id="searchInput" name="q" type="text" placeholder="Tìm kiếm sản phẩm..."
+                    aria-label="Tìm kiếm sản phẩm">
+            </form>
+            <div class="categories">
+                <span class="category-btn active" data-category="all">Tất cả</span>
+                {{#each allCategories}}
+                <span class="category-btn" data-category="{{this._id}}">{{this.name}}</span>
+                {{/each}}
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+<main class="container section">
+    <div class="sort-price">
+        <label>Giá:</label>
+        <button class="sort-btn" data-sort="asc"><i class="bi bi-arrow-up-circle"></i></button>
+        <button class="sort-btn" data-sort="desc"><i class="bi bi-arrow-down-circle"></i></button>
+    </div>
+    <div class="product-grid">
+        {{#if searchResults.length}}
+        {{#each searchResults}}
+        <article class="product-card" data-product data-name="RX-93 Nu Gundam Ver.Ka" data-category="Gundam"
+            data-price="189">
+            <div class="card-media">
+                <img src="{{this.images.[0]}}" alt="{{this.name}}">
+            </div>
+            <div class="card-body">
+                <p class="tag">{{this.brand.name}}</p>
+                <a href="/products/{{this._id}}">{{this.name}}</a>
+                <div class="card-footer">
+                    <span class="price">{{formatCurrency this.price}}</span>
+                    {{!-- <a class="btn small primary" href="cart.html">Add to Cart</a> --}}
+                </div>
+            </div>
+        </article>
+        {{/each}}
+        {{else}}
+        <p>Không tìm thấy sản phẩm nào phù hợp.</p>
+        {{/if}}
+    </div>
+</main>
+
+
+
+<script type="module" src="/javascripts/user/products.module.js"></script>
+
+{{/ _wrappers/user-wrapper}}

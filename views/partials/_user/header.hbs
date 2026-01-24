@@ -1,0 +1,45 @@
+<header class="site-header">
+  <div class="container nav-bar">
+    <a class="logo" href="/">
+      <img src="/images/logo.png" alt="">
+      HuyToys
+    </a>
+    <nav class="nav-links">
+      <a href="/">Trang chủ</a>
+      <a href="/products">Sản phẩm</a>
+      <a href="/profile">Hồ sơ</a>
+      <a href="/orders">Đơn hàng</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="icon-btn" href="/cart" aria-label="Giỏ hàng"><i class="bi bi-cart3"></i></a>
+      {{#if user}}
+
+      <div class="icon-btn profile" aria-label="{{user.fullName}}">
+        {{#if user.avatarUrl}}
+        <img class="user-avatar" src="{{user.avatarUrl}}" alt="">
+        {{else}}
+        <i class="bi bi-person-circle"></i>
+        {{/if}}
+
+        <ul class="dropdown-menu">
+          {{#if (eq user.role 0)}}
+          <li><a href="/admin/dashboard">Quản trị</a></li>
+          {{/if}}
+          <li><a class="logout">Đăng xuất</a></li>
+        </ul>
+      </div>
+      {{else}}
+      <a class="icon-btn" href="/login" aria-label="User"><i class="bi bi-person-circle"></i></a>
+      {{/if}}
+      <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Menu"><i class="bi bi-list"></i></button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/index">Trang chủ</a>
+    <a href="/products">Sản phẩm</a>
+    <a href="/profile">Hồ sơ</a>
+    <a href="/orders">Đơn hàng</a>
+    <a href="/login">Đăng nhập</a>
+    <a href="/register">Đăng ký</a>
+  </div>
+</header>

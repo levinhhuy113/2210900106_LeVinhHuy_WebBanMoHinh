@@ -1,0 +1,82 @@
+<div class="pagination mt-2">
+    <div class="pagination-info animate-slide-in-up">
+        Hiển thị {{pagination.startIndex}} - {{pagination.endIndex}} trên {{pagination.totalItems}} mục
+    </div>
+
+    {{!-- <div class="pagination-pages section animate-slide-in-up">
+        <ul>
+            {{#if pagination.hasPrevPage}}
+            <li class="page-item">
+                <a class="page-link"
+                    href="?page={{pagination.prevPage}}&sortField={{currentSortField}}&sortOrder={{currentSortOrder}}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            <div class="action-divider"></div>
+            {{/if}}
+
+            {{#each (paginationPages pagination.totalPages pagination.currentPage)}}
+            {{#if this.isEllipsis}}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            <div class="action-divider"></div>
+            {{else}}
+            <li class="page-item {{#if this.active}}active{{/if}}">
+                <a class="page-link"
+                    href="?page={{this.page}}&sortField={{../currentSortField}}&sortOrder={{../currentSortOrder}}">
+                    {{this.page}}
+                </a>
+            </li>
+            <div class="action-divider"></div>
+            {{/if}}
+            {{/each}}
+
+            {{#if pagination.hasNextPage}}
+            <li class="page-item">
+                <a class="page-link"
+                    href="?page={{pagination.nextPage}}&sortField={{currentSortField}}&sortOrder={{currentSortOrder}}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {{/if}}
+        </ul>
+    </div> --}}
+    {{#if (gt pagination.totalPages 1)}}
+    <div class="pagination-pages section animate-slide-in-up">
+        <ul>
+            {{#if pagination.hasPrevPage}}
+            <li class="page-item">
+                <a class="page-link"
+                    href="?page={{pagination.prevPage}}&sortField={{currentSortField}}&sortOrder={{currentSortOrder}}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            <div class="action-divider"></div>
+            {{/if}}
+
+            {{#each (paginationPages pagination.totalPages pagination.currentPage)}}
+            {{#if this.isEllipsis}}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            <div class="action-divider"></div>
+            {{else}}
+            <li class="page-item {{#if this.active}}active{{/if}}">
+                <a class="page-link"
+                    href="?page={{this.page}}&sortField={{../currentSortField}}&sortOrder={{../currentSortOrder}}">
+                    {{this.page}}
+                </a>
+            </li>
+            <div class="action-divider"></div>
+            {{/if}}
+            {{/each}}
+
+            {{#if pagination.hasNextPage}}
+            <li class="page-item">
+                <a class="page-link"
+                    href="?page={{pagination.nextPage}}&sortField={{currentSortField}}&sortOrder={{currentSortOrder}}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {{/if}}
+        </ul>
+    </div>
+    {{/if}}
+</div>

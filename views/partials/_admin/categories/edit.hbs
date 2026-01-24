@@ -1,0 +1,22 @@
+<div id="modalEditCategory" class="modal-wrapper">
+    <div class="modal-overlay"></div>
+    <div class="modal-panel">
+        <div class="modal-header">
+            <h3>Sửa Thương Hiệu</h3>
+            <button class="modal-close"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body">
+            <form id="formEditCategory">
+                <input type="hidden" id="editCategoryId" name="id" />
+                <div class="form-group">
+                    <label for="editCategoryName">Tên danh mục <span class="error">*</span></label>
+                    <input type="text" id="editCategoryName" name="name" />
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Lưu</button>
+                    <button type="button" class="btn-secondary modal-close">Huỷ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

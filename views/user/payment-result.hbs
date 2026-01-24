@@ -1,0 +1,48 @@
+{{#> _wrappers/user-wrapper}}
+
+<main class="section">
+    {{#if success}}
+
+    <div class="success">
+        <i class="bi bi-check-circle-fill"></i>
+        <h1>Cảm ơn bạn đã đặt hàng!</h1>
+        <p>{{message}}</p>
+        <div class="summary-row" style="margin-top:16px;">
+            <span>Mã đơn hàng #</span>
+            <strong>{{order.orderCode}}</strong>
+        </div>
+        <div class="summary-row">
+            <span>Trạng thái đơn hàng:</span>
+            <span class="status {{order.status}}">{{formatOrderStatus order.status}}</span>
+
+        </div>
+        <div class="promo-actions" style="justify-content:center; margin-top:18px;">
+            <a class="btn primary" href="/">Về trang chủ</a>
+            <a class="btn ghost" href="/products">Tiếp tục mua sắm</a>
+        </div>
+    </div>
+    {{else}}
+    <div class="success">
+        <i class="bi bi-check-circle-fill"></i>
+        <h1>Cảm ơn bạn đã đặt hàng!</h1>
+        <p>{{message}}</p>
+        {{!-- <div class="summary-row" style="margin-top:16px;">
+            <span>Mã đơn hàng #</span>
+            <strong>{{order.orderCode}}</strong>
+        </div>
+        <div class="summary-row">
+            <span>Trạng thái đơn hàng:</span>
+            <span class="status {{order.status}}">{{formatOrderStatus order.status}}</span>
+
+        </div> --}}
+        <div class="promo-actions" style="justify-content:center; margin-top:18px;">
+            <a class="btn primary" href="/">Về trang chủ</a>
+            <a class="btn ghost" href="/products">Tiếp tục mua sắm</a>
+        </div>
+    </div>
+    {{/if}}
+
+</main>
+
+
+{{/ _wrappers/user-wrapper}}

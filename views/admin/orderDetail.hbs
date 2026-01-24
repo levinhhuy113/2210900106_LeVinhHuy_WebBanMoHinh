@@ -1,0 +1,149 @@
+{{#> _wrappers/admin-wrapper}}
+
+<div class="orderDetail-page">
+    <button class="btn-back d-flex align-items-center">
+        <i class="bi bi-arrow-left"></i>
+        <span>Đơn hàng</span>
+    </button>
+
+    <div class="page-header mt-1">
+        <h1 class="page-title ellipsis line-2">{{title}}</h1>
+    </div>
+
+    <div class="page-content">
+        <div class="section animate-slide-in-up mt-2">
+
+            <!-- Thông tin đơn hàng -->
+            <div class="order-info card shadow-sm p-3 mb-4">
+                <h4>Thông tin đơn hàng</h4>
+                <p><strong>Mã đơn:</strong> {{order.orderCode}}</p>
+                <p><strong>Người nhận:</strong> {{order.toName}}</p>
+                <p><strong>Số điện thoại:</strong> {{order.toPhone}}</p>
+                <p><strong>Địa chỉ:</strong> {{fullAddress}}</p>
+                <p><strong>Thanh toán:</strong> {{order.paymentMethod}} {{#if order.gateway}}({{order.gateway}}){{/if}}
+                </p>
+                <p class="order-status">
+                    <strong>Trạng thái:</strong>
+                    {{!--
+                <div class="custom-select {{#unless (eq order.status 'pending')}}disabled{{/unless}}"
+                    id="orderSelect_{{order._id}}" data-value="{{order.status}}">
+                    <button type="button" class="cs-trigger {{order.status}}" aria-haspopup="listbox"
+                        aria-expanded="false">
+                        <span class="cs-label">
+                            {{#if (eq order.status 'pending')}}Chờ xác nhận
+                            {{else if (eq order.status 'confirmed')}}Đã xác nhận
+                            {{else if (eq order.status 'cancelled')}}Đã hủy
+                            {{else}}{{order.status}}{{/if}}
+                        </span>
+                        <i class="bi bi-caret-down-fill cs-caret"></i>
+                    </button>
+                    <div class="cs-options" role="listbox" tabindex="-1" aria-hidden="true">
+                        {{#if (eq order.status 'pending')}}
+                        <div class="cs-option" data-value="confirmed">Xác nhận</div>
+                        <div class="cs-option" data-value="cancelled">Hủy</div>
+                        {{/if}}
+                    </div>
+                </div> --}}
+                <div class="custom-select mt-1 {{#unless (lookup allowedTransitions order.status)}}disabled{{/unless}}"
+                    id="orderSelect_{{order._id}}" data-value="{{order.status}}">
+                    <button type="button" class="cs-trigger {{order.status}}" aria-haspopup="listbox"
+                        aria-expanded="false">
+                        <span class="cs-label">
+                            {{#if (eq order.status 'pending')}}Chờ xác nhận
+                            {{else if (eq order.status 'confirmed')}}Đã xác nhận
+                            {{else if (eq order.status 'preparing')}}Đang chuẩn bị
+                            {{else if (eq order.status 'shipping')}}Đang giao
+                            {{else if (eq order.status 'delivered')}}Đã giao
+                            {{else if (eq order.status 'cancelled')}}Đã hủy
+                            {{else if (eq order.status 'returned')}}Trả hàng
+                            {{else}}{{order.status}}{{/if}}
+                        </span>
+                        <i class="bi bi-caret-down-fill cs-caret"></i>
+                    </button>
+                    <div class="cs-options" role="listbox" tabindex="-1" aria-hidden="true">
+                        {{#each (lookup allowedTransitions order.status) as |nextStatus|}}
+                        <div class="cs-option" data-value="{{nextStatus}}">
+                            {{#if (eq nextStatus 'confirmed')}}Xác nhận
+                            {{else if (eq nextStatus 'preparing')}}Đang chuẩn bị
+                            {{else if (eq nextStatus 'shipping')}}Đang giao
+                            {{else if (eq nextStatus 'delivered')}}Đã giao
+                            {{else if (eq nextStatus 'cancelled')}}Hủy
+                            {{else if (eq nextStatus 'returned')}}Trả hàng
+                            {{else}}{{nextStatus}}{{/if}}
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+                </p>
+
+                <p><strong>Tổng tiền:</strong> {{formatCurrency order.totalPrice}}</p>
+                {{#if order.note}}
+                <p><strong>Ghi chú:</strong> {{order.note}}</p>
+                {{/if}}
+            </div>
+        </div>
+
+        <!-- Danh sách sản phẩm trong đơn -->
+        <div class="section animate-slide-in-up mt-2">
+            {{#if orderItems.length}}
+            <table class="table table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th class="fit center">#</th>
+                        <th>Sản phẩm</th>
+                        <th class="fit center">Số lượng</th>
+                        <th class="fit center">Giá</th>
+                        <th class="fit center">Thành tiền</th>
+                        {{#unless (or (eq order.status "pending") (eq order.status "cancelled"))}}
+                        <th class="fit center">Lô hàng</th>
+                        {{/unless}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each orderItems}}
+                    <tr>
+                        <td class="fit center">{{plusOne @index}}</td>
+                        <td class="product-info">
+                            {{#if this.productId.images.[0]}}
+                            <img src="{{this.productId.images.[0]}}" alt="{{this.productId.name}}"
+                                class="product-img me-2">
+                            {{/if}}
+                            <span>{{this.productId.name}}</span>
+                            {{#if this.variantKey}}
+                            <span>({{this.variantKey}})</span>
+                            {{/if}}
+                        </td>
+                        <td class="fit center">{{this.quantity}}</td>
+                        <td class="fit center">{{formatCurrency this.price}}</td>
+                        <td class="fit center">{{formatCurrency (multiply this.price this.quantity)}}</td>
+                        {{#unless (or (eq ../order.status "pending") (eq ../order.status "cancelled"))}}
+                        <td class="fit center">
+                            {{#each this.batches}}
+                            <div>{{this.batchCode}} (x{{this.quantity}})</div>
+                            {{/each}}
+                        </td>
+                        {{/unless}}
+                    </tr>
+                    {{/each}}
+
+                    <!-- Hàng tổng -->
+                    <tr>
+                        <td></td>
+                        <td class="text-end"><strong>Tổng</strong></td>
+                        <td class="fit center"><strong>{{totalQuantity}}</strong></td>
+                        <td></td>
+                        <td class="fit center"><strong>{{formatCurrency totalPrice}}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            {{else}}
+            <p class="text-muted" style="padding: 12px;">Chưa có sản phẩm nào trong đơn hàng này.</p>
+            {{/if}}
+        </div>
+
+    </div>
+</div>
+
+<script type="module" src="/javascripts/admin/orderDetail.module.js"></script>
+{{/ _wrappers/admin-wrapper}}

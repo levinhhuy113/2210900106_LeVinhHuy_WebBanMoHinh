@@ -1,0 +1,124 @@
+{{#> _wrappers/user-wrapper}}
+
+<main>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Bộ Sưu Tập Cao Cấp</p>
+        <h1>Điều Khiển Hangar với Gundam & Mô Hình Hạn Chế</h1>
+        <p>Chọn lọc, chính hãng và sẵn sàng trưng bày. Khám phá những bộ mô hình sáng rực, phiên bản độc quyền và phụ
+          kiện làm mỗi kệ trở nên huyền thoại.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="/products">Mua Ngay</a>
+          <a class="btn ghost" href="#new-arrivals">Hàng Mới</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="glass-card">
+          <img src="/images/banner-modal.jpg" alt="Featured Gundam">
+          <div class="badge">Phiên Bản Nổi Bật</div>
+        </div>
+        <div class="floating-tags">
+          <span>MG EX</span>
+          <span>Perfect Grade</span>
+          <span>Màu Hạn Chế</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section categories" id="categories">
+    <div class="container section-header">
+      <div>
+        <p class="eyebrow">Dòng Chọn Lọc</p>
+        <h2>Chọn Vũ Trụ Của Bạn</h2>
+      </div>
+      <a class="link-arrow" href="/products">
+        Khám Phá Tất Cả <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="container category-grid">
+
+      <a class="category-card">
+        <img src="/images/gundam.jpg" class="category-thumb gundam">
+        <h3>Gundam</h3>
+        <p>
+          Từ HG, MG đến PG – các bộ Gunpla chi tiết cao,
+          sẵn sàng cho những trận chiến huyền thoại.
+        </p>
+      </a>
+
+      <a class="category-card">
+        <img src="/images/onepiece.jpg" class="category-thumb gundam">
+        <h3>One Piece</h3>
+        <p>
+          Luffy, Zoro, Sanji và băng Mũ Rơm –
+          mô hình sống động từ thế giới hải tặc.
+        </p>
+      </a>
+
+      <a class="category-card">
+        <img src="/images/dragon-ball.jpg" class="category-thumb gundam">
+        <h3>Dragon Ball</h3>
+        <p>
+          Goku, Vegeta, Broly cùng những trận chiến
+          bùng nổ sức mạnh vượt giới hạn.
+        </p>
+      </a>
+    </div>
+  </section>
+
+
+  {{#each categoryBlocks}}
+  <section class="section products-preview">
+    <div class="container section-header">
+      <div>
+        <p class="eyebrow">Tiêu Điểm</p>
+        <h2>{{this.categoryName}}</h2>
+      </div>
+      <a class="link-arrow" href="/products?category={{this._id}}">Xem danh mục <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="container product-grid">
+      {{#each this.products}}
+      <article class="product-card">
+        <div class="card-media">
+          <img src="{{this.images.[0]}}" alt="RX-93 Nu Gundam Ver.Ka">
+      
+        </div>
+        <div class="card-body">
+          <p class="tag">{{this.brandName}}</p>
+          <a href="/products/{{this._id}}">{{this.name}}</a>
+          <div class="card-footer">
+            <span class="price">{{formatCurrency this.price}}</span>
+          </div>
+        </div>
+      </article>
+      {{/each}}
+
+    </div>
+  </section>
+  {{/each}}
+
+  <section class="section promo" id="new-arrivals">
+    <div class="container promo-grid">
+      <div>
+        <p class="eyebrow">Làn Sóng Mới</p>
+        <h2>Phiên Bản Neon Mới</h2>
+        <p style="text-align: justify;">
+          Khám phá phiên bản Neon giới hạn với decal phản chiếu độc đáo và các chi tiết phát sáng tinh tế.
+          Mỗi mẫu được chế tác tỉ mỉ, thể hiện sự kết hợp hoàn hảo giữa màu sắc nổi bật và chất liệu cao cấp.
+          Đây là cơ hội để bổ sung vào bộ sưu tập cá nhân, trải nghiệm cảm giác sở hữu một tác phẩm vừa hiện đại vừa độc
+          quyền.
+          Sở hữu ngay trước khi chúng biến mất khỏi hangar, đảm bảo bạn luôn dẫn đầu xu hướng mô hình sưu tầm.
+        </p>
+      </div>
+      <div class="promo-media">
+        <img src="/images/modal-1.jpg" alt="Promo">
+        <div class="badge blue">Mới</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+{{/ _wrappers/user-wrapper}}

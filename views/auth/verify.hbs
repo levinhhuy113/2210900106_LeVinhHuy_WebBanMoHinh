@@ -1,0 +1,54 @@
+{{#> _wrappers/auth-wrapper}}
+<main class="auth-body">
+    <div class="auth-box">
+        <p class="eyebrow">Xác nhận email</p>
+
+        {{#if success}}
+            <h1>Thành công!</h1>
+            <p>{{message}}</p>
+            <a href="/login" class="btn primary mt-2">Đăng nhập ngay</a>
+        {{else}}
+            <h1>Thất bại</h1>
+            <p>{{message}}</p>
+
+            {{#if email}}
+                <button id="resendBtn" class="btn primary btn-outline-warning mt-2">Gửi lại mã xác nhận</button>
+            {{else}}
+                <a href="/register" class="btn primary mt-2">Đăng ký lại</a>
+            {{/if}}
+        {{/if}}
+    </div>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const resendBtn = document.getElementById('resendBtn');
+        const email = "{{email}}"; // email trả từ server
+
+        if (resendBtn && email) {
+            resendBtn.addEventListener('click', async () => {
+                try {
+                    showLoading('Đang gửi lại mã xác nhận...');
+                    const res = await fetch('/api/resend-verification', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email })
+                    });
+
+                    const data = await res.json();
+                    hideLoading();
+
+                    if (data.code === 201) {
+                        showToast(data.message || 'Đã gửi lại mã xác nhận. Vui lòng kiểm tra email.', 'success');
+                    } else {
+                        showToast(data.message || 'Không thể gửi lại mã. Vui lòng thử lại sau.', 'error');
+                    }
+                } catch (err) {
+                    hideLoading();
+                    showToast('Đã xảy ra lỗi. Vui lòng thử lại.', 'error');
+                }
+            });
+        }
+    });
+</script>
+{{/ _wrappers/auth-wrapper}}
