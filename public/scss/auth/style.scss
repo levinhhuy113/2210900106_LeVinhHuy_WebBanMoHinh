@@ -1,0 +1,105 @@
+@use '../variables-user';
+@use '../variables';
+
+.auth-body {
+    min-height: 70vh;
+    display: grid;
+    place-items: center;
+    padding: 40px 0;
+
+
+    .auth-box {
+        background: variables-user.$panel;
+        border: 1px solid variables-user.$border;
+        border-radius: variables-user.$radius;
+        padding: 22px;
+        width: min(420px, 92vw);
+        box-shadow: variables-user.$shadow;
+    }
+
+    .auth-box h1 {
+        margin-top: 0;
+        margin-bottom: 24px;
+        margin-top: 12px;
+    }
+
+
+    .helper {
+        color: variables-user.$muted;
+        font-size: 0.9rem;
+        margin-top: 12px;
+        text-align: center;
+
+        a {
+            color: variables-user.$blue;
+        }
+    }
+
+
+
+    form {
+        display: grid;
+        gap: 12px;
+    }
+
+    label {
+        display: block;
+        color: variables-user.$muted;
+        margin-bottom: 4px;
+    }
+
+
+    input,
+    textarea {
+        font-family: "Poppins", system-ui, -apple-system, sans-serif;
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid variables-user.$border;
+        background: variables-user.$panel;
+        color: variables-user.$text;
+        outline: none;
+    }
+
+    input:focus,
+    textarea:focus {
+        border-color: variables-user.$blue;
+        box-shadow: 0 0 0 1px variables-user.$blue, 0 0 16px variables-user.$blue-glow;
+    }
+
+    .forgot-password {
+        display: flex;
+        justify-content: end;
+
+        a {
+            font-size: 12px;
+            color: variables-user.$blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+
+    #resendWrapper {
+        display: none;
+        text-align: center;
+        margin-top: 16px;
+    }
+
+    #resendWrapper button {
+        font-size: 0.85rem;
+    }
+
+    #resendMessage {
+        color: variables.$color-accent-3;
+    }
+
+    .show {
+        display: block !important;
+    }
+
+
+    #resetBtn {
+        width: 100%;
+        margin-top: 24px;
+    }
+}

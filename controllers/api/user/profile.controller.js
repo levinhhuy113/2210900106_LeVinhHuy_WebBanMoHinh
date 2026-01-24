@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 class ProfileController {
     async updateProfile(req, res) {
         try {
-            const userId = req.user._id; // giả sử đã có middleware authUser set req.user
+            const userId = req.user._id;
             const { fullName, phoneNumber, address, provinceId, districtId, wardCode } = req.body;
 
             // Kiểm tra thông tin bắt buộc

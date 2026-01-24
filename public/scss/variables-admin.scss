@@ -1,0 +1,87 @@
+// @use 'variables';
+
+// $color-primary: #273142;
+
+// $color-background: #1B2431;
+// $color-surface: #323D4E;
+
+// $color-text-primary: variables.$color-white;
+// $color-text-secondary: #A0AEC0;
+// $color-stroke-1: #313D4F;
+// $color-stroke-2: rgba(207, 207, 207, 0.1);
+
+// $color-disabled: #3D4A5F;
+
+
+// $zindex-admin-sidebar: 99;
+
+// $admin-sidebar-width: 280px;
+// $transition-speed: 0.3s;
+
+// $margin-step: 12px;
+// $padding-step: 12px;
+// $border-radius: 8px;
+// $border-radius-sm: 4px;
+
+@use 'variables';
+
+$color-primary: #3E4A54; // Xám ấm hơi xanh – chỉ nhỉnh hơn nền 1 chút
+
+$color-background: #1E2227; // Nền tối vừa, ấm
+$color-surface: #252A30; // Card/panel sáng hơn nền rất nhẹ
+
+$color-text-primary: variables.$color-white;
+$color-text-secondary: #B0B6BE; // Chữ phụ dịu, không xám xanh lạnh
+
+$color-stroke-1: #2E343B; // Border hòa vào nền
+$color-stroke-2: rgba(176, 182, 190, 0.12); // Divider cực nhẹ
+
+$color-disabled: #3A3F45; // Disabled cùng tone
+
+$zindex-admin-sidebar: 99;
+
+$admin-sidebar-width: 280px;
+$transition-speed: 0.3s;
+
+$margin-step: 12px;
+$padding-step: 12px;
+$border-radius: 8px;
+$border-radius-sm: 4px;
+
+
+// Highlight nhẹ – item đang được chọn (sidebar, list)
+$color-active: #4A5661;
+
+// Hover – sáng hơn active một chút
+$color-hover: #505D69;
+
+// Button chính (primary action nhưng không chói)
+$color-button-primary: #46525D;
+
+// Button secondary / outline
+$color-button-secondary: #2A2F35;
+
+// Background cho item được select
+$color-selected-bg: #2B3138;
+
+// Border cho item active
+$color-active-border: #586470;
+
+// Text khi active
+$color-active-text: #E6E9ED;
+
+// Shadow rất nhẹ – card nền
+$shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.25);
+
+// Shadow mặc định – card, sidebar
+$shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+// Shadow nổi hơn – dropdown, modal nhỏ
+$shadow-md: 0 6px 16px rgba(0, 0, 0, 0.35);
+
+// Shadow focus – item active / selected
+$shadow-active: 0 0 0 1px rgba(88, 100, 112, 0.4),
+                 0 4px 10px rgba(0, 0, 0, 0.35);
+
+// Shadow hover – button / row hover
+$shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.32);
