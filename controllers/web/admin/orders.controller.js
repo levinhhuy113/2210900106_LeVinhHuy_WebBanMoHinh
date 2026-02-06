@@ -33,6 +33,7 @@ class OrderController {
             }
 
             const totalItems = await Order.countDocuments();
+            
             const totalPages = Math.ceil(totalItems / limit);
 
             const orders = await Order.find(filter)
@@ -60,7 +61,7 @@ class OrderController {
             // Tính toán phân trang
             const startIndex = (page - 1) * limit;
             const endIndex = Math.min(startIndex + enhancedOrders.length, totalItems);
-
+            console.log(enhancedOrders);
             res.render('admin/orders', {
                 title: 'Quản lý đơn hàng',
                 orders: enhancedOrders,

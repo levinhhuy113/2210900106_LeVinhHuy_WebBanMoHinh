@@ -375,10 +375,12 @@
         }
 
         if (combination.images && combination.images.length > 0) {
-            const mainImage = document.getElementById('main-product-image');
-            if (mainImage) {
-                mainImage.src = combination.images[0];
-            }
+            const mainImage = document.getElementById('mainProductImage');
+            const variantImageUrl = combination.images[0];
+            const imageIndex = PRODUCT.images.findIndex(img => img === variantImageUrl);
+
+            const thumbs = document.querySelectorAll('.thumbnail-images .thumbnail');
+            thumbs[imageIndex]?.click();
         }
     }
 
